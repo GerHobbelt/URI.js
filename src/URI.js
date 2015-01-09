@@ -10,6 +10,9 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
+ *
+ * Edited 2015/01/09 (Changed regex on L196 to match domains with no http:// or www, e.g. "google.com")
+ *
  */
 (function (root, factory) {
   'use strict';
@@ -188,10 +191,12 @@
   // best solution in a regex-golf we did a couple of ages ago at
   // * http://mathiasbynens.be/demo/url-regex
   // * http://rodneyrehm.de/t/url-regex.html
-  URI.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
+  //URI.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
+  // Updated to match domain.ext type urls (i.e. without http:// or www)
+  URI.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9]+[.][a-z]{1,4})(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
   URI.findUri = {
     // valid "scheme://" or "www."
-    start: /\b(?:([a-z][a-z0-9.+-]*:\/\/)|www\.)/gi,
+    start: /\b(?:([a-z][a-z0-9.+-]*:\/\/)|www\.|[a-z0-9-]*\.)/gi,
     // everything up to the next whitespace
     end: /[\s\r\n]|$/,
     // trim trailing punctuation captured by end RegExp
