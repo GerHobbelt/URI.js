@@ -1,17 +1,8 @@
 {
   "name": "URIjs",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "main": [
-    "src/URI.js",
-    "src/IPv6.js",
-    "src/SecondLevelDomains.js",
-    "src/punycode.js",
-    "src/URITemplate.js",
-    "src/jquery.URI.js",
-    "src/URI.min.js",
-    "src/jquery.URI.min.js",
-    "src/URI.fragmentQuery.js",
-    "src/URI.fragmentURI.js"
+    "src/URI.js"
   ],
   "ignore": [
     ".*",
@@ -25,5 +16,6 @@
   ],
   "dependencies": {
     "jquery": ">=1.7.0"
-  }
+  },
+  "license": "MIT"
 }

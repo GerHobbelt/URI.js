@@ -79,7 +79,7 @@ See the [About Page](http://medialize.github.io/URI.js/) and [API Docs](http://m
 
 URI.js (without plugins) has a gzipped weight of about 7KB - if you include all extensions you end up at about 13KB. So unless you *need* second level domain support and use URI templates, we suggest you don't include them in your build. If you don't need a full featured URI mangler, it may be worth looking into the much smaller parser-only alternatives [listed below](#alternatives).
 
-URI.js is available through [npm](http://npmjs.org/), [bower](http://bower.io/), [Jam](http://jamjs.org/) and manually from the [build page](http://medialize.github.io/URI.js/build.html):
+URI.js is available through [npm](http://npmjs.org/), [bower](http://bower.io/), [Jam](http://jamjs.org/), [spm](http://spmjs.io/) and manually from the [build page](http://medialize.github.io/URI.js/build.html):
 
 ```bash
 # using bower
@@ -90,6 +90,9 @@ jam install URIjs
 
 # using npm
 npm install URIjs
+
+# using spm
+spm install urijs
 ```
 
 ### Browser ###
@@ -237,6 +240,13 @@ URI.js is published under the [MIT license](http://www.opensource.org/licenses/m
 
 
 ## Changelog ##
+
+### 1.14.2 (February 25th 2015) ###
+
+* fixing inclusion of LICENSE in packages - ([Issue #174](https://github.com/medialize/URI.js/issues/174))
+* fixing [`URI.parseHost()`](http://medialize.github.io/URI.js/docs.html#static-parseHost) to not interpret colon in path as IPv6 hostname - ([Issue #190](https://github.com/medialize/URI.js/issues/190))
+* adding meta data for [SPM](http://www.spmjs.io/) package manager - ([Issue #176](https://github.com/medialize/URI.js/issues/176))
+* adding license meta to `bower.json`
 
 ### 1.14.1 (October 1st 2014) ###
 
