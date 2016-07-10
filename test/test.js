@@ -9,6 +9,16 @@
   });
 
   module('constructing');
+  test('URI()', function() {
+    var u = URI();
+    ok(u instanceof URI, 'instanceof URI');
+    equal(u.toString(), window.location && window.location.href || '', 'is location (browser) or empty string (node)');
+  });
+  test('URI(undefined)', function() {
+    raises(function() {
+      URI(undefined);
+    }, TypeError, 'Failing undefined input');
+  });
   test('new URI(string)', function() {
     var u = new URI('http://example.org/');
     ok(u instanceof URI, 'instanceof URI');
@@ -22,6 +32,14 @@
   test('new URI(Location)', function () {
     var u = new URI(location);
     equal(u.href(), String(location.href), 'location object');
+  });
+  test('new URI(undefined)', function() {
+    var u = new URI();
+    ok(u instanceof URI, 'instanceof URI');
+    equal(u.toString(), window.location && window.location.href || '', 'is location (browser) or empty string (node)');
+    raises(function() {
+      new URI(undefined);
+    }, TypeError, 'Failing undefined input');
   });
   (function() {
     var element;
@@ -812,6 +830,14 @@
     u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
     u.removeQuery({foo: 'bar', obj: undefined, bar: ['1', '2']});
     equal(u.query(), 'foo=baz&foo=bam&bar=3', 'removing object');
+
+    u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
+    u.removeQuery(/^bar/);
+    equal(u.query(), 'foo=bar&foo=baz&foo=bam&obj=bam', 'removing by RegExp');
+
+    u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=bar&bar=baz&bar=bam');
+    u.removeQuery('foo', /[rz]$/);
+    equal(u.query(), 'foo=bam&obj=bam&bar=bar&bar=baz&bar=bam', 'removing by value RegExp');
   });
   test('duplicateQueryParameters', function() {
     var u = new URI('?bar=1&bar=1&bar=1');
