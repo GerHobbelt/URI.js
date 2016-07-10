@@ -973,6 +973,12 @@
 
       end = start + slice.length;
       var result = callback(slice, start, end, string);
+      if (result === undefined) {
+        _start.lastIndex = end;
+        continue;
+      }
+
+      result = String(result);
       string = string.slice(0, start) + result + string.slice(end);
       _start.lastIndex = start + result.length;
     }
@@ -2035,13 +2041,37 @@
     var properties = ['protocol', 'username', 'password', 'hostname', 'port'];
     var basedir, i, p;
 
+    if (!(base instanceof URI)) {
+      base = new URI(base);
+    }
+
+    // << Readium patch
+    // "filesystem:chrome-extension:"
+    //
+    
+    if (this._parts.protocol == 'filesystem') {
+
+      return resolved;
+    }
+
+    if (base._parts.protocol == 'filesystem') {
+
+      var uri = this.absoluteTo(base._parts.path);
+
+      if (base._parts.path.indexOf("chrome-extension:") !== -1 || base._parts.path.indexOf("http:") !== -1 || base._parts.path.indexOf("https:") !== -1) {
+
+        return new URI('filesystem:' + uri.toString());
+      }
+
+      return uri;
+    }
+
     if (this._parts.urn) {
       throw new Error('URNs do not have any generally defined hierarchical components');
     }
 
-    if (!(base instanceof URI)) {
-      base = new URI(base);
-    }
+    //
+    // Readium patch >>
 
     if (!resolved._parts.protocol) {
       resolved._parts.protocol = base._parts.protocol;
