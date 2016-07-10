@@ -23,13 +23,13 @@ function build(files) {
     
     $.when.apply($, connections).done(function() {
         $progress.prop('value', 2).text('Compiling Scripts');
-        $.post('http://closure-compiler.appspot.com/compile', {
+        $.post('https://closure-compiler.appspot.com/compile', {
             js_code: sources.join("\n\n"),
             compilation_level: "SIMPLE_OPTIMIZATIONS",
             output_format: "text",
             output_info: "compiled_code"
         }, function(data) {
-            var code = "/*! URI.js v1.15.1 http://medialize.github.io/URI.js/ */\n/* build contains: " + files.join(', ') + " */\n" + data;
+            var code = "/*! URI.js v1.15.2 http://medialize.github.io/URI.js/ */\n/* build contains: " + files.join(', ') + " */\n" + data;
             $progress.hide();
             $out.val(code).parent().show();
             $out.prev().find('a').remove();

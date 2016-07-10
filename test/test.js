@@ -299,6 +299,22 @@
     equal(u.query(), 'foo', 'search: ""');
     equal(u.search(), '?foo', 'search: "" - query');
 
+    u.search('foo=&foo=bar');
+    equal(u.query(), 'foo=&foo=bar', 'search: foo=&foo=bar');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['', 'bar']}), 'parsed query: {foo:["", "bar"]}');
+
+    u.search('foo=bar&foo=');
+    equal(u.query(), 'foo=bar&foo=', 'search: foo=bar&foo=');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', '']}), 'parsed query: {foo:["bar", ""]}');
+
+    u.search('foo=bar&foo');
+    equal(u.query(), 'foo=bar&foo', 'search: foo=bar&foo');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', null]}), 'parsed query: {foo:["bar", null]}');
+
+    u.search('foo&foo=bar');
+    equal(u.query(), 'foo&foo=bar', 'search: foo&foo=bar');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: [null, 'bar']}), 'parsed query: {foo:[null, "bar"]}');
+
     // parsing empty query
     var t;
     t = u.query('?').query(true);
@@ -691,6 +707,12 @@
 
     equal(s.join('||'), 'some thing||directory||foo.html', 'segmentCoded get array');
 
+    u.segmentCoded(['hello/world']);
+    equal(u.path(), '/hello%2Fworld', 'escape in array');
+
+    u.segmentCoded('hello/world');
+    equal(u.path(), '/hello%2Fworld/hello%2Fworld', 'escape appended value');
+
     u.segmentCoded(['hello world', 'mars', 'foo.html']);
     equal(u.path(), '/hello%20world/mars/foo.html', 'segmentCoded set array');
 
@@ -1074,15 +1096,24 @@
     u.path('/.//').normalizePath();
     equal(u.path(), '/', 'root /.//');
 
-    u.path('/.').normalizePath();
-    equal(u.path(), '/', 'root /.');
-
     // encoding
     u._parts.path = '/~userhome/@mine;is %2F and/';
     u.normalize();
     equal(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
 
     // relative URL
+    u = URI('/.').normalizePath();
+    equal(u.path(), '/', 'root /.');
+
+    u = URI('/..').normalizePath();
+    equal(u.path(), '/', 'root /..');
+
+    u = URI('/foo/.').normalizePath();
+    equal(u.path(), '/foo/', 'root /foo/.');
+
+    u = URI('/foo/..').normalizePath();
+    equal(u.path(), '/', 'root /foo/..');
+
     u = URI('../../../../../www/common/js/app/../../../../www_test/common/js/app/views/view-test.html');
     u.normalize();
     equal(u.path(), '../../../../../www_test/common/js/app/views/view-test.html', 'parent relative');
@@ -1310,6 +1341,11 @@
         url: '/base/path/with/subdir/inner.html',
         base: '/base/path/top.html',
         result: 'with/subdir/inner.html'
+      }, {
+        name: 'same directory',
+        url: '/path/',
+        base: '/path/top.html',
+        result: './'
       }, {
         name: 'absolute /',
         url: 'http://example.org/foo/bar/bat',

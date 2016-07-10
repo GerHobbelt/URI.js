@@ -1,7 +1,7 @@
 /*!
  * URI.js - Mutating URLs
  *
- * Version: 1.15.1
+ * Version: 1.15.2
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -75,7 +75,7 @@
     return this;
   }
 
-  URI.version = '1.15.1';
+  URI.version = '1.15.2';
 
   var p = URI.prototype;
   var hasOwn = Object.prototype.hasOwnProperty;
@@ -611,7 +611,7 @@
       value = v.length ? URI.decodeQuery(v.join('='), escapeQuerySpace) : null;
 
       if (hasOwn.call(items, name)) {
-        if (typeof items[name] === 'string') {
+        if (typeof items[name] === 'string' || items[name] === null) {
           items[name] = [items[name]];
         }
 
@@ -1629,7 +1629,7 @@
       v = (typeof v === 'string' || v instanceof String) ? URI.encode(v) : v;
     } else {
       for (i = 0, l = v.length; i < l; i++) {
-        v[i] = URI.decode(v[i]);
+        v[i] = URI.encode(v[i]);
       }
     }
 
@@ -1784,6 +1784,11 @@
     if (_path.charAt(0) !== '/') {
       _was_relative = true;
       _path = '/' + _path;
+    }
+
+    // handle relative files (as opposed to directories)
+    if (_path.slice(-3) === '/..' || _path.slice(-2) === '/.') {
+      _path += '/';
     }
 
     // resolve simples
@@ -2021,7 +2026,7 @@
     }
 
     // determine common sub path
-    common = URI.commonPath(relative.path(), base.path());
+    common = URI.commonPath(relativePath, basePath);
 
     // If the paths have nothing in common, return a relative URL with the absolute path.
     if (!common) {
@@ -2033,7 +2038,7 @@
       .replace(/[^\/]*$/, '')
       .replace(/.*?\//g, '../');
 
-    relativeParts.path = parents + relativeParts.path.substring(common.length);
+    relativeParts.path = (parents + relativeParts.path.substring(common.length)) || './';
 
     return relative.build();
   };

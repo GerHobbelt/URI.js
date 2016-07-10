@@ -1,6 +1,6 @@
 {
   "name": "URIjs",
-  "version": "1.15.1",
+  "version": "1.15.2",
   "title": "URI.js - Mutating URLs",
   "author": {
     "name": "Rodney Rehm",
@@ -10,12 +10,7 @@
     "type": "git",
     "url": "https://github.com/medialize/URI.js.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license"
-    }
-  ],
+  "license": "MIT",
   "description": "URI.js is a Javascript library for working with URLs.",
   "keywords": [
     "uri",
@@ -61,9 +56,6 @@
   ],
   "jam": {
     "main": "src/URI.js",
-    "dependencies": {
-      "jquery": ">=1.7.0"
-    },
     "include": [
       "src/URI.js",
       "src/IPv6.js",
