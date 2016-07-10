@@ -16,6 +16,7 @@
 I always want to shoot myself in the head when looking at code like the following:
 
 ```javascript
+var URI = require('URIjs');
 var url = "http://example.org/foo?bar=baz";
 var separator = url.indexOf('?') > -1 ? '&' : '?';
 
@@ -25,6 +26,7 @@ url += separator + encodeURIComponent("foo") + "=" + encodeURIComponent("bar");
 Things are looking up with [URL](https://developer.mozilla.org/en/docs/Web/API/URL) and the [URL spec](http://url.spec.whatwg.org/) but until we can safely rely on that API, have a look at URI.js for a clean and simple API for mutating URIs:
 
 ```javascript
+var URI = require('URIjs');
 var url = new URI("http://example.org/foo?bar=baz");
 url.addQuery("foo", "bar");
 ```
